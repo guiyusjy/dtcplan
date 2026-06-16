@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>甜菜待办 V1.9.3</title>
+<style>
+:root{--bg:#fffaf2;--ink:#263126;--muted:#90988b;--green:#9fcd73;--green2:#edf8df;--line:#596451;--event:#7aa7d9;--paper:#fffdf8;--danger:#ef7777;--dash:#c7d2bc;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Comic Sans MS","LXGW WenKai","Kaiti SC","PingFang SC",system-ui,sans-serif;min-height:100vh}.app{max-width:520px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:92px;background:radial-gradient(circle at 15% 10%,rgba(160,205,115,.10),transparent 26%),linear-gradient(#fffdf8,#fffaf0)}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1.5px solid #eadfc9}.brand{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:700;letter-spacing:.5px}.beet{width:33px;height:33px;border:2px solid var(--ink);border-radius:55% 55% 62% 62%;background:#ff8b80;position:relative;transform:rotate(-8deg)}.beet:before{content:"";position:absolute;width:11px;height:18px;border:2px solid var(--ink);border-bottom:0;border-radius:10px 10px 0 0;background:#8fd06a;left:6px;top:-17px;transform:rotate(-25deg)}.beet:after{content:"";position:absolute;width:11px;height:18px;border:2px solid var(--ink);border-bottom:0;border-radius:10px 10px 0 0;background:#8fd06a;right:4px;top:-17px;transform:rotate(25deg)}.topIcon{font-size:24px;color:#58604f}.page{display:none;padding:14px 18px 20px}.page.active{display:block}.tabs{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:520px;height:76px;background:rgba(255,253,248,.96);backdrop-filter:blur(8px);border-top:1.5px solid #e8ddc7;display:grid;grid-template-columns:1fr 1fr;z-index:20}.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#777;font-size:14px}.tab .ico{font-size:24px}.tab.active{color:#4b983c;font-weight:700}.filter{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);width:236px;height:42px;background:#fffdf8;border:1.8px solid #c9c9bd;border-radius:999px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;z-index:18;box-shadow:0 3px 16px rgba(76,70,50,.08)}.filter button{border:0;background:transparent;font:inherit;font-size:17px;color:#555}.filter button.active{background:var(--green2);color:#406a34;font-weight:700}.fab{position:fixed;right:calc(50% - 235px);bottom:102px;width:60px;height:60px;border-radius:50%;background:#c9e89f;border:2.2px solid var(--ink);font-size:40px;line-height:52px;z-index:25;box-shadow:0 6px 0 rgba(58,66,47,.12);transition:.18s}.fab:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(58,66,47,.12)}@media(max-width:520px){.fab{right:20px}}
+.timeline{position:relative;padding:6px 0 24px 0}.dateBubble{display:inline-block;padding:9px 17px;border:1.8px solid var(--ink);border-radius:15px 18px 14px 17px;background:#f9fff0;margin:0 0 14px 42px;font-size:18px;position:relative;box-shadow:2px 3px 0 rgba(87,96,74,.08);transform:rotate(-.5deg)}.dateBubble:after{content:"";position:absolute;left:28px;bottom:-11px;width:14px;height:14px;background:#f9fff0;border-left:1.8px solid var(--ink);border-bottom:1.8px solid var(--ink);transform:rotate(-45deg)}
+.item{position:relative;display:grid;grid-template-columns:68px 25px 1fr;gap:8px;min-height:72px;touch-action:pan-y;transition:transform .28s cubic-bezier(.2,.8,.2,1), opacity .28s, max-height .42s cubic-bezier(.2,.8,.2,1), margin .42s;max-height:260px}.item:before{content:"";position:absolute;left:80px;top:18px;bottom:-18px;width:2px;background:var(--line);border-radius:10px;opacity:.9;transform:rotate(.55deg)}.item:nth-child(2n):before{transform:rotate(-.45deg);left:81px}.item:nth-child(3n):before{transform:rotate(.25deg);left:79px}.item:last-child:before{bottom:18px}.time{padding-top:7px;text-align:right;font-size:18px;color:#222b21;line-height:1.35}.time .pill{font-size:13px}.dot{width:15px;height:15px;border:1.8px solid var(--ink);border-radius:50%;background:#dff3c5;margin-top:12px;z-index:1;box-shadow:0 0 0 4px var(--bg)}.item.event .dot{background:#d8eafd;border-radius:4px;transform:rotate(45deg);box-shadow:0 0 0 4px var(--bg)}.card{padding:2px 0 18px 7px;position:relative}.card:after{content:"";position:absolute;left:0;right:0;bottom:8px;border-bottom:1.8px dashed var(--dash);transform:rotate(-.25deg)}.item:nth-child(2n) .card:after{transform:rotate(.18deg)}.title{font-size:21px;margin:3px 0 9px;letter-spacing:.5px}.taskLine{display:flex;align-items:flex-start;gap:10px;font-size:19px;margin:9px 0;line-height:1.45;position:relative;transition:transform .25s ease,opacity .25s ease,color .25s ease}.taskLine:active{transform:scale(.985)}.box{width:22px;height:22px;border:1.9px solid var(--ink);border-radius:5px;flex:0 0 auto;margin-top:3px;background:#fffdf8;position:relative;transition:background .2s,border-color .2s,transform .22s}.box.checked{background:#d9f0c2;transform:scale(1.04)}.box.checked:after{content:"✓";position:absolute;font-size:25px;left:2px;top:-10px;color:#17864a;animation:tickPop .25s ease}.taskText{position:relative;display:inline;transition:color .28s ease,opacity .28s ease}.taskText:after{content:"";position:absolute;left:-2px;right:auto;top:54%;height:2px;background:#87917f;border-radius:20px;width:0;transform:rotate(-1.2deg);transition:width .38s cubic-bezier(.25,.8,.25,1)}.done .taskText{color:#8d9688}.done .taskText:after{width:calc(100% + 4px)}.taskLine.justDone .taskText:after{animation:strike .42s cubic-bezier(.25,.8,.25,1) forwards}.taskLine.justDone{animation:softDone .42s ease}.item.fadeAway{opacity:0;transform:translateX(24px) scale(.985);max-height:0!important;min-height:0;margin:0;overflow:hidden}.eventText{font-size:18px;color:#2a4766;line-height:1.55}.count{font-size:28px;color:#4e8aca;margin:6px 0}.empty{text-align:center;color:#8c9386;padding:75px 20px;font-size:18px}.scheduleCard{background:#fffef8;border:1.8px solid var(--ink);border-radius:18px 16px 20px 15px;padding:16px;margin:14px 0;position:relative;box-shadow:3px 3px 0 #e9dfc8;transform:rotate(-.2deg)}.scheduleCard:nth-child(2n){transform:rotate(.25deg)}.scheduleCard .x{position:absolute;right:13px;top:10px;border:0;background:transparent;font-size:22px}.modal{position:fixed;inset:0;background:rgba(45,47,41,.25);display:none;align-items:flex-end;justify-content:center;z-index:50}.modal.show{display:flex}.sheet{width:100%;max-width:520px;max-height:88vh;overflow:auto;background:#fffdf8;border-radius:24px 24px 0 0;border:1.9px solid var(--ink);padding:18px}.sheet h2{margin:0 0 14px;font-size:24px}input,textarea,select{width:100%;border:1.8px solid #bfc5b7;border-radius:14px;background:#fff;padding:12px;font:inherit;font-size:17px;margin:8px 0 12px;outline:none}textarea{min-height:120px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:10px;margin-top:8px}.actions button{flex:1;border:1.8px solid var(--ink);border-radius:16px;padding:12px;font:inherit;font-size:18px;background:#fff}.actions .save{background:#c9e89f}.photoPreview{max-width:100%;border-radius:14px;border:1.8px solid #ddd;margin-top:8px}.detailImg{max-width:100%;border-radius:14px;margin-top:10px;border:1.8px solid #ddd}.hint{font-size:14px;color:#7e8678}.deleteBg{position:absolute;right:0;top:4px;bottom:12px;width:82px;background:var(--danger);color:white;display:flex;align-items:center;justify-content:center;border-radius:16px;font-weight:700;z-index:-1}.swiping{transform:translateX(-82px);transition:.24s cubic-bezier(.2,.8,.2,1)}.pill{display:inline-block;padding:3px 9px;border:1.4px solid #b9c4ad;border-radius:999px;background:#f5fbec;color:#63745b;font-size:14px;margin-left:6px;white-space:nowrap}
+@keyframes tickPop{0%{transform:scale(.4) rotate(-18deg);opacity:0}80%{transform:scale(1.14) rotate(4deg);opacity:1}100%{transform:scale(1)}}@keyframes strike{0%{width:0}100%{width:calc(100% + 4px)}}@keyframes softDone{0%{transform:translateX(0)}45%{transform:translateX(5px)}100%{transform:translateX(0)}}
+
+/* V1.2：修正时间轴对齐与日期样式 */
+.timeline{padding:10px 0 24px 0;}
+.dateBubble{display:inline-flex;align-items:center;justify-content:center;min-width:96px;padding:8px 18px;border:1.6px solid #9fb18e;border-radius:999px;background:#f4fbea;margin:2px 0 18px 8px;font-size:17px;color:#45643e;box-shadow:none;transform:none;}
+.dateBubble:after{display:none;}
+.dayMark{grid-column:1/4;margin:8px 0 8px 4px;color:#5f7b54;font-size:16px;}
+.dayMark span{display:inline-block;padding:5px 14px;border:1.4px solid #aebf9e;border-radius:999px;background:#f7fced;}
+.item{grid-template-columns:70px 24px 1fr;gap:6px;align-items:start;}
+.item:before{left:81px;top:18px;bottom:-18px;width:2px;background:#596451;}
+.item:nth-child(2n):before,.item:nth-child(3n):before{left:81px;}
+.dot{width:16px;height:16px;margin:10px auto 0 auto;}
+.time{padding-top:5px;text-align:right;font-size:18px;color:#20281f;}
+.card{padding-left:12px;}
+.title:empty{display:none;}
+.eventText{font-size:18px;color:#2a4766;line-height:1.55;margin-top:4px;}
+.eventMeta{font-size:14px;color:#7b8a94;margin-top:3px;}
+
+/* V1.6：手机端日程时间输入与多图管理 */
+.timePickWrap{display:grid;grid-template-columns:1fr;gap:8px;margin:6px 0 12px;}
+.timeField{border:1.8px solid #c5ceb8;border-radius:16px;background:#fff;padding:8px 10px 10px;}
+.timeField .fieldName{display:block;font-size:14px;color:#66725f;margin:0 0 4px 2px;}
+.timeField input{margin:0;border:0;background:#fff;padding:6px 2px;font-size:18px;min-height:42px;}
+.timeField input:focus{box-shadow:none;}
+.photoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.photoThumb{position:relative;border:1.6px solid #d8d8cd;border-radius:13px;overflow:hidden;background:#fff;aspect-ratio:1/1;}
+.photoThumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.photoThumb button{position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:50%;border:1.3px solid #333;background:rgba(255,253,248,.9);font-size:16px;line-height:18px;}
+.detailImgGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px;}
+.detailImgGrid img{width:100%;border-radius:14px;border:1.8px solid #ddd;}
+.fileBtn{display:block;border:1.8px dashed #aab89e;border-radius:14px;background:#fbfff5;padding:12px;margin:8px 0 6px;text-align:center;color:#557148;font-size:17px;}
+.fileBtn input{display:none;}
+@media(max-width:430px){.sheet{max-height:90vh;padding:16px}.row{grid-template-columns:1fr}.photoGrid{grid-template-columns:repeat(3,1fr)}}
+
+
+/* V1.7：质感优化、强迫症友好勾选框、微信式左滑删除 */
+:root{--shadow:rgba(76,70,50,.10);}
+header{background:rgba(255,253,248,.78);backdrop-filter:blur(10px);}
+.timeline{padding-bottom:34px;}
+.dayMark{margin:10px 0 14px 2px;}
+.dayMark span{font-size:15px;padding:5px 13px;border-color:#c8d7b9;background:rgba(247,252,237,.78);box-shadow:0 2px 8px rgba(99,116,91,.06);}
+.item{overflow:visible;transition:opacity .28s ease,max-height .42s cubic-bezier(.2,.8,.2,1),margin .42s ease;will-change:opacity,max-height;}
+.item:before{opacity:.55;width:1.6px;background:linear-gradient(to bottom,#5b6756 45%,rgba(91,103,86,.45));}
+.time,.dot,.card{position:relative;z-index:2;transition:transform .28s cubic-bezier(.2,.9,.2,1);}
+.card{background:linear-gradient(180deg,rgba(255,253,248,.92),rgba(255,250,242,.72));border-radius:16px 18px 18px 14px;padding:9px 8px 19px 14px;box-shadow:0 5px 18px rgba(79,70,50,.045);}
+.card:after{left:10px;right:10px;bottom:7px;border-bottom-color:#d7dfce;opacity:.9;}
+.dot{width:17px;height:17px;border-width:1.7px;box-shadow:0 0 0 5px #fffaf2,0 2px 5px rgba(79,70,50,.12);}
+.item.event .dot{box-shadow:0 0 0 5px #fffaf2,0 2px 5px rgba(79,70,50,.10);}
+.title{font-size:20px;margin:0 0 8px;}
+.taskLine{align-items:center;gap:11px;margin:8px 0;font-size:18.5px;}
+.box{width:23px;height:23px;border:1.8px solid #344033;border-radius:7px;margin-top:0;background:#fffef8;display:inline-flex;align-items:center;justify-content:center;box-shadow:1px 1px 0 rgba(52,64,51,.10);}
+.box.checked{background:#e1f4ce;border-color:#557a45;transform:scale(1.02);}
+.box.checked:after{content:'✓';position:static;display:block;font-size:20px;line-height:1;color:#247d45;transform:translateY(-1px);animation:tickPop2 .22s ease;}
+@keyframes tickPop2{0%{transform:translateY(-1px) scale(.35) rotate(-12deg);opacity:0}75%{transform:translateY(-1px) scale(1.15) rotate(4deg);opacity:1}100%{transform:translateY(-1px) scale(1)}}
+.taskText:after{height:2.2px;background:#9aa294;top:52%;}
+.item.fadeAway{opacity:0;transform:none;max-height:0!important;min-height:0;margin:0;overflow:hidden;}
+.deleteBg{z-index:1;right:5px;top:9px;bottom:18px;width:76px;border:0;border-radius:18px;background:#ef7777;color:#fff;font:inherit;font-size:16px;font-weight:700;box-shadow:0 5px 12px rgba(239,119,119,.20);}
+.swiping{transform:none!important;}
+.item.swiping .time,.item.swiping .dot,.item.swiping .card{transform:translateX(-86px);}
+.item.deleting .time,.item.deleting .dot,.item.deleting .card{transform:translateX(28px);}
+.item.deleting{opacity:0;max-height:0!important;min-height:0;margin:0;overflow:hidden;}
+.photoThumb,.detailImgGrid img{border-radius:15px;border-color:#d8dfcf;box-shadow:0 3px 10px rgba(80,70,50,.08);}
+.tabs{height:calc(76px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);}
+@media(max-width:520px){.page{padding-left:14px;padding-right:14px}.filter{bottom:calc(84px + env(safe-area-inset-bottom));}.fab{bottom:calc(104px + env(safe-area-inset-bottom));}}
+
+
+/* V1.8：取消滑动删除，改为右侧圆形叉号 + 二次确认 */
+.item{touch-action:auto;}
+.card{padding-right:42px;}
+.deleteBg,.swiping{display:none!important;}
+.item.swiping .time,.item.swiping .dot,.item.swiping .card{transform:none!important;}
+.deleteRound{position:absolute;right:7px;top:10px;width:28px;height:28px;border-radius:50%;border:1.5px solid #e0cfc9;background:#fff7f4;color:#d06b63;font-size:20px;line-height:24px;display:flex;align-items:center;justify-content:center;z-index:8;box-shadow:0 3px 8px rgba(208,107,99,.12);font-family:inherit;transition:transform .16s ease,background .16s ease;}
+.deleteRound:active{transform:scale(.88);background:#ffe9e4;}
+#confirmModal{align-items:center;}
+.confirmBox{width:86%;max-width:340px;background:#fffdf8;border:1.9px solid var(--ink);border-radius:22px 20px 24px 21px;padding:20px 18px;box-shadow:0 12px 35px rgba(53,48,40,.18);transform:rotate(-.2deg);}
+.confirmBox h3{margin:0 0 8px;font-size:22px;}
+.confirmBox p{margin:0 0 16px;color:#70796a;font-size:16px;line-height:1.5;}
+.confirmActions{display:flex;gap:10px;}
+.confirmActions button{flex:1;border:1.7px solid var(--ink);border-radius:15px;padding:11px 8px;font:inherit;font-size:17px;background:#fff;}
+.confirmActions .dangerBtn{background:#ffe2de;color:#b94e47;}
+.item.deleting .deleteRound{opacity:0;transform:scale(.7);}
+.scheduleCard{padding-right:52px;}
+.scheduleCard .x{width:30px;height:30px;border-radius:50%;border:1.5px solid #e0cfc9;background:#fff7f4;color:#d06b63;font-size:21px;line-height:26px;display:flex;align-items:center;justify-content:center;}
+
+
+/* V1.9：三个点菜单删除版 */
+.card{padding-right:44px;}
+.deleteRound{display:none!important;}
+.moreBtn{
+  position:absolute;
+  right:6px;
+  top:8px;
+  width:34px;
+  height:34px;
+  border:0;
+  background:transparent;
+  color:#8f988c;
+  font-size:25px;
+  line-height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:12;
+  border-radius:50%;
+  font-family:inherit;
+  padding:0;
+  transition:background .16s ease, transform .16s ease, color .16s ease;
+}
+.moreBtn:active,.moreBtn.active{background:rgba(137,148,132,.10);color:#5f695d;transform:scale(.94)}
+.moreMenu{
+  position:absolute;
+  right:6px;
+  top:40px;
+  min-width:92px;
+  background:rgba(255,253,248,.98);
+  border:1px solid #e4e8dd;
+  border-radius:14px;
+  box-shadow:0 10px 26px rgba(68,62,48,.13);
+  z-index:30;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(-5px) scale(.96);
+  pointer-events:none;
+  transition:opacity .16s ease, transform .16s ease;
+}
+.moreMenu.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.moreMenu button{
+  border:0;
+  background:transparent;
+  width:100%;
+  padding:11px 18px;
+  font:inherit;
+  font-size:16px;
+  color:#5e665b;
+  text-align:center;
+}
+.moreMenu button:active{background:#f2f5ee;}
+.item.deleting .moreBtn,.item.deleting .moreMenu{opacity:0;transform:scale(.7);}
+.scheduleCard{padding-right:48px;}
+.scheduleCard .x{display:none!important;}
+.scheduleCard .moreBtn{right:10px;top:8px;}
+.scheduleCard .moreMenu{right:10px;top:42px;}
+.confirmActions .dangerBtn{background:#fff;color:#7e4d4a;border-color:#d9c8c4;}
+
+/* V1.9.1：保存按钮修复与轻提示 */
+.toast{position:fixed;left:50%;bottom:168px;transform:translateX(-50%) translateY(8px);background:rgba(38,49,38,.88);color:#fff;padding:10px 16px;border-radius:999px;font-size:15px;z-index:80;opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease;box-shadow:0 8px 24px rgba(38,49,38,.18)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sheet{position:relative;z-index:55}.actions button:active{transform:scale(.98)}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="beet"></div><span>甜菜待办</span></div><div class="topIcon">⌗</div></header>
+<section id="todoPage" class="page active"><div id="todoTimeline" class="timeline"></div></section>
+<section id="schedulePage" class="page"><div id="scheduleList"></div></section>
+<div class="filter" id="todoFilter"><button class="active" data-filter="open">未完成</button><button data-filter="all">全部</button></div>
+<button class="fab" id="fab">＋</button>
+<nav class="tabs"><div class="tab active" data-page="todo"><div class="ico">☑</div><div>待办</div></div><div class="tab" data-page="schedule"><div class="ico">▣</div><div>日程</div></div></nav>
+</div>
+<div class="modal" id="todoModal"><div class="sheet"><h2>新增待办</h2><input id="todoTitle" placeholder="标题（选填）"><textarea id="todoText" placeholder="输入待办事项，换行会自动变成多个小方框"></textarea><label class="fileBtn">＋ 插入图片（可多选）<input type="file" id="todoImage" accept="image/*" multiple></label><div id="imgBox" class="photoGrid"></div><div class="actions"><button onclick="closeModal('todoModal')">取消</button><button type="button" id="saveTodoBtn" class="save" onclick="saveTodo(event)">保存</button></div></div></div>
+<div class="modal" id="scheduleModal"><div class="sheet"><h2>新增日程</h2><label>WHEN</label><div class="timePickWrap"><div class="timeField"><span class="fieldName">选择日期</span><input id="schDate" type="date"></div><div class="timeField"><span class="fieldName">选择时间（选填）</span><input id="schTime" type="time"></div></div><label>WHERE（选填）</label><input id="schWhere" placeholder="地点"><label>WHAT</label><input id="schWhat" placeholder="事件"><label>TIPS</label><textarea id="schTips" placeholder="备注，点开日程后可查看"></textarea><div class="actions"><button onclick="closeModal('scheduleModal')">取消</button><button type="button" id="saveScheduleBtn" class="save" onclick="saveSchedule(event)">保存</button></div></div></div>
+<div class="modal" id="detailModal"><div class="sheet" id="detailSheet"></div></div>
+<div class="modal" id="confirmModal"><div class="confirmBox"><h3>确认删除吗？</h3><p>删除后这条记录会从甜菜待办里消失。</p><div class="confirmActions"><button onclick="cancelDelete()">取消</button><button class="dangerBtn" onclick="doDelete()">确认删除</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='beet_todo_v1';let state;try{state=JSON.parse(localStorage.getItem(KEY)||'{"todos":[],"schedules":[]}')}catch(e){state={todos:[],schedules:[]};localStorage.setItem(KEY,JSON.stringify(state))}if(!state||!Array.isArray(state.todos)||!Array.isArray(state.schedules)){state={todos:[],schedules:[]};localStorage.setItem(KEY,JSON.stringify(state))}let page='todo',filter='open',imageData=[],imageProcessing=false,isSavingTodo=false,isSavingSchedule=false;
+const $=id=>document.getElementById(id);function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch(err){console.error('保存失败',err);showToast('存储空间不够，请少放几张图');return false}}let toastTimer=null;function showToast(msg){let t=$('toast');if(!t)return;clearTimeout(toastTimer);t.textContent=msg;t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),1500)}function pad(n){return String(n).padStart(2,'0')}function nowDate(){let d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}function nowTime(){let d=new Date();return `${pad(d.getHours())}:${pad(d.getMinutes())}`}function fmtDate(s){let d=new Date(s+'T00:00');return `${d.getMonth()+1}月${d.getDate()}日`}function fmtFull(dt){let d=new Date(dt);return `${d.getMonth()+1}月${d.getDate()}日`}function fmtTime(dt){let d=new Date(dt);return `${pad(d.getHours())}:${pad(d.getMinutes())}`}function todayWeek(){return ['周日','周一','周二','周三','周四','周五','周六'][new Date().getDay()]}function weekOfDate(s){let d=new Date(s+'T00:00');return ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()]}function dateOnlyFromISO(dt){let d=new Date(dt);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function openModal(id){$(id).classList.add('show')}function closeModal(id){$(id).classList.remove('show')}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{page=t.dataset.page;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('todoPage').classList.toggle('active',page==='todo');$('schedulePage').classList.toggle('active',page==='schedule');$('todoFilter').style.display=page==='todo'?'grid':'none';render()});
+document.querySelectorAll('#todoFilter button').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('#todoFilter button').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderTodos()});
+$('fab').onclick=()=>{if(page==='todo'){imageData=[];$('todoTitle').value='';$('todoText').value='';$('todoImage').value='';renderImgBox();openModal('todoModal')}else{$('schDate').value=nowDate();$('schTime').value='';$('schWhere').value='';$('schWhat').value='';$('schTips').value='';openModal('scheduleModal')}};
+$('todoImage').onchange=async e=>{let files=[...e.target.files];if(!files.length)return;imageProcessing=true;showToast('图片处理中…');for(const f of files){try{const src=await compressImageFile(f);if(src){imageData.push(src);renderImgBox()}}catch(err){console.error(err);showToast('有图片读取失败')}}e.target.value='';imageProcessing=false;showToast(imageData.length?'图片已插入':'图片读取失败')};
+function readFileAsDataURL(file){return new Promise((resolve,reject)=>{let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+function loadImage(src){return new Promise((resolve,reject)=>{let img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src})}
+async function compressImageFile(file){
+  const raw=await readFileAsDataURL(file);
+  if(!file.type.startsWith('image/')) return '';
+  if(file.type==='image/gif'){showToast('暂不支持动图保存');return ''}
+  const img=await loadImage(raw);
+  let w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+  // 多图保存最容易被 localStorage 容量卡住，所以这里压得更稳：最长边约 820px，单张控制在约 220KB 内。
+  let maxSide=820, quality=0.62, out='';
+  for(let round=0; round<5; round++){
+    const scale=Math.min(1,maxSide/Math.max(w,h));
+    const cw=Math.max(1,Math.round(w*scale));
+    const ch=Math.max(1,Math.round(h*scale));
+    const canvas=document.createElement('canvas');canvas.width=cw;canvas.height=ch;
+    const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,cw,ch);
+    out=canvas.toDataURL('image/jpeg',quality);
+    if(out.length<230000) break;
+    maxSide=Math.round(maxSide*0.78);
+    quality=Math.max(0.38,quality-0.08);
+  }
+  return out;
+}
+function renderImgBox(){let box=$('imgBox');if(!box)return;box.innerHTML=imageData.map((src,i)=>`<div class="photoThumb"><img src="${src}"><button type="button" onclick="removeTempImg(${i})">×</button></div>`).join('')}
+function removeTempImg(i){imageData.splice(i,1);renderImgBox()};
+function saveTodo(e){if(e){e.preventDefault();e.stopPropagation()}closeMoreMenus&&closeMoreMenus();if(isSavingTodo){showToast('正在保存…');return false}if(imageProcessing){showToast('图片还在处理中');return false}let lines=$('todoText').value.split('\n').map(x=>x.trim()).filter(Boolean);let title=$('todoTitle').value.trim();if(!title&&!lines.length){showToast('请输入待办内容');return false}isSavingTodo=true;let item={id:Date.now()+'t',title,createdAt:new Date().toISOString(),tasks:lines.map(x=>({text:x,done:false})),images:[...imageData]};state.todos.unshift(item);cleanupDuplicateTodos(false);if(!persist()){state.todos=state.todos.filter(x=>x.id!==item.id);isSavingTodo=false;showToast('图片太多或太大，请删掉几张再保存');return false}closeModal('todoModal');render();showToast('已保存');setTimeout(()=>{isSavingTodo=false},650);return false}
+function saveSchedule(e){if(e){e.preventDefault();e.stopPropagation()}closeMoreMenus&&closeMoreMenus();if(isSavingSchedule){showToast('正在保存…');return false}let date=$('schDate').value||nowDate(),time=$('schTime').value,what=$('schWhat').value.trim();if(!what){showToast('请输入事件内容');return false}isSavingSchedule=true;let dt=date+'T'+(time||'00:00');let item={id:Date.now()+'s',date,time,dt,where:$('schWhere').value.trim(),what,tips:$('schTips').value.trim(),createdAt:new Date().toISOString()};state.schedules.unshift(item);if(!persist()){state.schedules=state.schedules.filter(x=>x.id!==item.id);isSavingSchedule=false;return false}closeModal('scheduleModal');render();showToast('已保存');setTimeout(()=>{isSavingSchedule=false},650);return false}
+function renderTodos(){
+ let wrap=$('todoTimeline');
+ let rows=[];
+ state.todos.forEach(t=>{
+   let visible=filter==='all'||t.tasks.some(x=>!x.done);
+   if(visible)rows.push({type:'todo',sort:t.createdAt,dateKey:dateOnlyFromISO(t.createdAt),timeText:fmtTime(t.createdAt),data:t});
+ });
+ state.schedules.forEach(s=>{
+   const created=s.createdAt||s.dt;
+   rows.push({type:'event',sort:created,dateKey:dateOnlyFromISO(created),timeText:fmtTime(created),data:s});
+ });
+ rows.sort((a,b)=>new Date(b.sort)-new Date(a.sort));
+ if(!rows.length){wrap.innerHTML='<div class="empty">还没有内容，点右下角 + 开始记录</div>';return}
+ let html='';
+ let lastDate='';
+ rows.forEach(r=>{
+   if(r.dateKey!==lastDate){
+     lastDate=r.dateKey;
+     html+=`<div class="dayMark"><span>${fmtDate(r.dateKey)}　${weekOfDate(r.dateKey)}</span></div>`;
+   }
+   html+=`<div class="item ${r.type==='event'?'event':''}" data-id="${r.data.id}" data-type="${r.type}"><button class="moreBtn" onclick="toggleMoreMenu(event, this)">⋯</button><div class="moreMenu"><button onclick="askDelete(event, '${r.type}', '${r.data.id}')">删除</button></div><div class="time">${r.timeText}</div><div class="dot"></div><div class="card">`;
+   if(r.type==='todo'){
+     let imgs=getTodoImages(r.data);
+     if(r.data.title||imgs.length){
+       html+=`<div class="title" onclick="showTodo('${r.data.id}')">${r.data.title?escapeHtml(r.data.title):''}${imgs.length?'<span class="pill">'+imgs.length+'图</span>':''}</div>`;
+     }
+     r.data.tasks.forEach((x,i)=>{
+       // 未完成页：只要这一组还有未完成事项，就显示整组；已完成的小项保留划线变灰。
+       html+=`<div class="taskLine ${x.done?'done':''}" onclick="toggleTask('${r.data.id}',${i},this)"><span class="box ${x.done?'checked':''}"></span><span class="taskText">${escapeHtml(x.text)}</span></div>`;
+     });
+   }else{
+     let s=r.data;
+     html+=`<div onclick="showSchedule('${s.id}')"><div class="eventText">📅 ${s.where?escapeHtml(s.where)+'　':''}${escapeHtml(s.what)}</div><div class="eventMeta">事件时间：${fmtDate(s.date)} ${s.time||''}</div></div>`;
+   }
+   html+='</div></div>';
+ });
+ wrap.innerHTML=html;
+}
+function renderSchedules(){let box=$('scheduleList');let arr=[...state.schedules].sort((a,b)=>new Date(a.dt)-new Date(b.dt));if(!arr.length){box.innerHTML='<div class="empty">还没有日程，点右下角 + 添加</div>';return}box.innerHTML=arr.map(s=>{let days=Math.ceil((new Date(s.date+'T00:00')-new Date(new Date().toDateString()))/86400000);let txt=days>0?'还有 '+days+' 天':days<0?'已过去 '+Math.abs(days)+' 天':'就是今天';return `<div class="scheduleCard" onclick="showSchedule('${s.id}')"><button class="moreBtn" onclick="toggleMoreMenu(event, this)">⋯</button><div class="moreMenu"><button onclick="askDelete(event, 'event', '${s.id}')">删除</button></div><div class="title">${escapeHtml(s.what)}</div><div class="count">${txt}</div><div>${fmtDate(s.date)} ${s.time||''} ${s.where?escapeHtml(s.where):''}</div></div>`}).join('')}
+function render(){renderTodos();renderSchedules()}function toggleTask(id,i,el){let t=state.todos.find(x=>x.id===id);if(!t)return;let task=t.tasks[i];task.done=!task.done;persist();
+ if(el){el.classList.toggle('done',task.done);el.classList.toggle('justDone',task.done);let b=el.querySelector('.box');if(b)b.classList.toggle('checked',task.done)}
+ let allDone=t.tasks.length>0&&t.tasks.every(x=>x.done);
+ // 未完成页里：一组待办只完成其中一项时不消失，只划线变灰；整组全部完成后才从未完成时间轴滑走。
+ if(filter==='open'&&allDone){let item=el&&el.closest('.item');setTimeout(()=>{if(item)item.classList.add('fadeAway')},430);setTimeout(renderTodos,820)}else{setTimeout(renderTodos,430)}}
+function getTodoImages(t){return Array.isArray(t.images)?t.images:(t.image?[t.image]:[])}
+function showTodo(id){let t=state.todos.find(x=>x.id===id);let imgs=getTodoImages(t);$('detailSheet').innerHTML=`<h2>${escapeHtml(t.title||'待办详情')}</h2>${t.tasks.map((x,i)=>`<div class="taskLine ${x.done?'done':''}" onclick="toggleTask('${t.id}',${i},this);setTimeout(()=>closeModal('detailModal'),380)"><span class="box ${x.done?'checked':''}"></span><span class="taskText">${escapeHtml(x.text)}</span></div>`).join('')}${imgs.length?'<div class="detailImgGrid">'+imgs.map(src=>'<img src="'+src+'">').join('')+'</div>':''}<div class="hint">后续新增的待办会作为新的时间轴记录，保留新增时刻。</div><input id="appendTaskText" placeholder="新增一条待办"><div class="actions"><button onclick="closeModal('detailModal')">关闭</button><button onclick="appendTodo('${t.id}')">新增</button><button onclick="closeModal('detailModal');askDelete(event, 'todo', '${t.id}')">删除</button></div>`;openModal('detailModal')}
+function appendTodo(id){let base=state.todos.find(x=>x.id===id);let text=$('appendTaskText')&&$('appendTaskText').value.trim();if(!base||!text)return;state.todos.unshift({id:Date.now()+'t',title:base.title||'',createdAt:new Date().toISOString(),tasks:[{text,done:false}],images:[],image:''});persist();closeModal('detailModal');renderTodos()}
+function showSchedule(id){let s=state.schedules.find(x=>x.id===id);$('detailSheet').innerHTML=`<h2>${escapeHtml(s.what)}</h2><p><b>时间：</b>${fmtDate(s.date)} ${s.time||''}</p><p><b>地点：</b>${escapeHtml(s.where||'未填写')}</p><p><b>备注：</b>${escapeHtml(s.tips||'无')}</p><div class="actions"><button onclick="closeModal('detailModal')">关闭</button><button onclick="closeModal('detailModal');askDelete(event, 'event', '${s.id}')">删除</button></div>`;openModal('detailModal')}
+function delTodo(id){state.todos=state.todos.filter(x=>x.id!==id);persist();render()}function delSchedule(id){state.schedules=state.schedules.filter(x=>x.id!==id);persist();render()}function escapeHtml(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+let pendingDelete=null;
+function askDelete(e,type,id){if(e){e.stopPropagation();e.preventDefault()}closeMoreMenus();pendingDelete={type,id};openModal('confirmModal')}
+function cancelDelete(){pendingDelete=null;closeModal('confirmModal')}
+function doDelete(){if(!pendingDelete)return cancelDelete();closeModal('confirmModal');closeModal('detailModal');let del={...pendingDelete};let item=document.querySelector(`.item[data-id="${del.id}"]`);let card=document.querySelector(`.scheduleCard .moreMenu button[onclick*="${del.id}"]`)?.closest('.scheduleCard');if(item)item.classList.add('deleting');if(card){card.style.opacity='0';card.style.transform='translateX(18px) scale(.98)';card.style.transition='.25s ease'}setTimeout(()=>{del.type==='todo'?delTodo(del.id):delSchedule(del.id);pendingDelete=null;showToast('已删除')},240)}
+
+
+function todoSignature(t){return [String(t.title||''), (t.tasks||[]).map(x=>String(x.text||'')).join('||'), (t.images||[]).map(x=>String(x).slice(0,160)).join('@@')].join('###')}
+function cleanupDuplicateTodos(show=true){
+  const seen=new Map();
+  const cleaned=[];
+  let removed=0;
+  for(const t of state.todos){
+    const sig=todoSignature(t);
+    const time=new Date(t.createdAt||0).getTime();
+    const prev=seen.get(sig);
+    if(prev && Math.abs(prev-time)<10*60*1000){removed++;continue}
+    seen.set(sig,time);
+    cleaned.push(t);
+  }
+  if(removed){state.todos=cleaned;persist();if(show)showToast('已合并重复记录')}
+  return removed;
+}
+
+function closeMoreMenus(){document.querySelectorAll('.moreMenu.show').forEach(m=>m.classList.remove('show'));document.querySelectorAll('.moreBtn.active').forEach(b=>b.classList.remove('active'))}
+function toggleMoreMenu(e,btn){if(e){e.stopPropagation();e.preventDefault()}let menu=btn.nextElementSibling;let open=menu&&menu.classList.contains('show');closeMoreMenus();if(menu&&!open){menu.classList.add('show');btn.classList.add('active')}}
+document.addEventListener('click',e=>{if(!e.target.closest('.moreBtn')&&!e.target.closest('.moreMenu'))closeMoreMenus()});
+cleanupDuplicateTodos(false);
+render();
+</script>
+</body>
+</html>
